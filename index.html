@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>RPG Runing</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        
+        /*grid布局*/
+        .btnsArea {
+            /*设置网格布局*/
+            display: grid;
+            /*设置列数，以及每一列对应的宽度*/
+            grid-template-columns: 40px 40px 40px;
+             /*设置行数，以及每一行对应的高度*/
+            grid-template-rows: 30px 30px 30px;
+             /* 设置行间距（即行与行的间距）和列间距 即列与列的间距）*/
+            grid-gap: 10px;
+            /*设置整个内容区域在容器里面的水平位置*/
+            justify-content: right;
+            margin: 50px 30px 0 0;
+        }
+
+        .btnsArea li {
+            width: 40px;
+            height: 30px;
+        }
+
+        .btnsArea li input {
+            width: 100%;
+            height: 100%;
+            background: #f40;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        img {
+            /*绝对定位*/
+            position: absolute;
+            top: 300px;
+            left: 500px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <img id="RPG" src="images/down-0.png" alt="">
+
+    <ul class="btnsArea">
+        <li><input id='lu' type="button" value="左上"></li>
+        <li><input id='up' type="button" value="向上"></li>
+        <li><input id='rightUp' type="button" value="右上"></li>
+        <li><input id='left' type="button" value="向左"></li>
+        <li><input id='stop' type="button" value="停止"></li>
+        <li><input id='right' type="button" value="向右"></li>
+        <li><input id='ld' type="button" value="左下"></li>
+        <li><input id='down' type="button" value="向下"></li>
+        <li><input id='rd' type="button" value="右下"></li>
+    </ul>
+    <script>
+        var rpgDom = document.getElementById("RPG"); // 运动的小人
+        var btnsArea = document.getElementsByClassName("btnsArea")[0]; // 按钮区域
+
+        var i = 0; // 运动的动作 （就是对应一张图片）
+        var speed = 10; // 小人运动的速度
+        var rpgRunning = null; // 保存定时器的返回值
+        var stopImge = "down"; // 小人运动的初始默认运动方向
+
+        btnsArea.addEventListener("click", function (e) { // 事件绑定
+            console.log(e.target.id);
+            if (e.target.id == '') { // 判断点击的元素是不是在按钮区域内部的元素（即input标签）
+                return;
+            }
+            var flage = e.target.id;
+            clearInterval(rpgRunning); // 清除定时器
+
+
+            if (flage == 'stop') {
+                clearInterval(rpgRunning);
+                rpgDom.src = "images/" + stopImge + "-" + 0 + ".png"; // 修改小人当前运动方向上的运动动作-0/1/2/3/4，本质就是修改图片（下面同理）
+                return; // 退出程序
+            }
+            stopImge = flage; // 获取小人的最新运动方向
+            rpgRunning = setInterval(function () {
+                i++;
+                rpgDom.src = "images/" + flage + "-" + i + ".png";
+                i = i % 4;
+                switch (flage) {
+                    case "down":
+                        rpgDom.style.top = rpgDom.offsetTop + speed + "px";
+                        break;
+                    case "up":
+                        rpgDom.style.top = rpgDom.offsetTop - speed + "px";
+                        break;
+                    case "left":
+                        rpgDom.style.left = rpgDom.offsetLeft - speed + "px";
+                        break;
+                    case "right":
+                        rpgDom.style.left = rpgDom.offsetLeft + speed + "px";
+                        break;
+                        // 左上
+                    case "lu":
+                        rpgDom.style.top = rpgDom.offsetTop - speed + "px";
+                        rpgDom.style.left = rpgDom.offsetLeft - speed + "px";
+                        break;
+                        //右上
+                    case "rightUp":
+                        rpgDom.style.top = rpgDom.offsetTop - speed + "px";
+                        rpgDom.style.left = rpgDom.offsetLeft + speed + "px";
+                        break;
+
+                        //左下
+                    case "ld":
+                        rpgDom.style.left = rpgDom.offsetLeft - speed + "px";
+                        rpgDom.style.top = rpgDom.offsetTop + speed + "px";
+                        break;
+                        //右下
+                    case "rd":
+                        rpgDom.style.left = rpgDom.offsetLeft + speed + "px";
+                        rpgDom.style.top = rpgDom.offsetTop + speed + "px";
+                        break;
+                }
+            }, 100);
+        });
+    </script>
+</body>
+
+</html>
